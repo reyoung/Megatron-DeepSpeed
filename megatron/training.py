@@ -511,8 +511,8 @@ def train_step(forward_step_func, data_iterator,
         skipped_iter = 0
         grad_norm = model[0].get_global_grad_norm()
         num_zeros_in_grad = 0
-        print("after deepspeed train step {os.getenv('LOCAL_RANK')}", flush=True)
-        return {'lm loss' : loss}, skipped_iter, grad_norm, num_zeros_in_grad
+        print(f"after deepspeed train step {os.getenv('LOCAL_RANK')}", flush=True)
+        return {'lm loss': loss}, skipped_iter, grad_norm, num_zeros_in_grad
 
     # Set grad to zero.
     if not args.deepspeed:

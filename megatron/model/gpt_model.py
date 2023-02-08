@@ -33,6 +33,7 @@ from megatron.model.fused_layer_norm import MixedFusedLayerNorm as LayerNorm
 from megatron.model.module import float16_to_fp32
 from .language_model import EmbeddingPipe
 from .transformer import ParallelTransformerLayerPipe
+import torch.distributed as dist
 
 
 def post_language_model_processing(lm_output, labels, logit_weights,
@@ -299,6 +300,7 @@ class GPTModelPipe(PipelineModule,MegatronModule):
         topo = PipeModelDataParallelTopology(num_pp=mpu.get_pipeline_model_parallel_world_size(),
                                              num_mp=mpu.get_tensor_model_parallel_world_size(),
                                              num_dp=mpu.get_data_parallel_world_size())
+        print(f"RANK {dist.get_rank()} TOPO: {topo}", flush=True)
 
         # here one can extend the regex to include more layers to be counted towards partitioning,
         # e.g. 'type:transformer|embedding' will add up all the transformer blocks and also the first
