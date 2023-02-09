@@ -505,13 +505,11 @@ def train_step(forward_step_func, data_iterator,
     timers = get_timers()
 
     if args.deepspeed:
-        print(f"before deepspeed train step {os.getenv('LOCAL_RANK')}", flush=True)
         assert isinstance(model[0], deepspeed.PipelineEngine), model
         loss = model[0].train_batch(data_iter=data_iterator)
         skipped_iter = 0
         grad_norm = model[0].get_global_grad_norm()
         num_zeros_in_grad = 0
-        print(f"after deepspeed train step {os.getenv('LOCAL_RANK')}", flush=True)
         return {'lm loss': loss}, skipped_iter, grad_norm, num_zeros_in_grad
 
     # Set grad to zero.
